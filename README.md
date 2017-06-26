@@ -1,6 +1,6 @@
 # Spotippos
 
-Projeto DEMO para desenvolver uma aplicação SPA com Angula com servidor de autenticação
+Projeto DEMO para desenvolver uma aplicação SPA com Angular com servidor de autenticação
 e consumindo uma API RESTful, ambos servidores com Spring Boot, OAuth2 e JWT
 
 # Descrição / Objetivo

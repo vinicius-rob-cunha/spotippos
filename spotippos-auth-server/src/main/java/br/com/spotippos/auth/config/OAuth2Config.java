@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -26,23 +28,28 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
 //    @Autowired
 //    private DataSource dataSource;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenStore(tokenStore()).tokenEnhancer(jwtTokenEnhancer()).authenticationManager(authenticationManager);
+        endpoints.tokenStore(tokenStore()).tokenEnhancer(jwtTokenEnhancer())
+                 .authenticationManager(authenticationManager)
+                 .userDetailsService(userDetailsService);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("web_app")
-                .secret("mysecret")
-                .scopes("FOO")
+                .redirectUris("http://example.com") //adicionar outras
+                .scopes("read","write","trust")
+                //caso esse autoApprove não esteja como true, uma tela será exibida para usuário perguntando se autoriza o acesso
                 .autoApprove(true)
-                .authorities("FOO_READ", "FOO_WRITE")
-                .authorizedGrantTypes("implicit","refresh_token", "password", "authorization_code");
+                .authorizedGrantTypes("refresh_token", "authorization_code");
     }
 
     @Bean

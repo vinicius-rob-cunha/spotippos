@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * Created by vinic on 25/06/2017.
@@ -24,9 +26,13 @@ public class LoginController {
     private UserAccountService userService;
 
     @GetMapping(value={"/", "/login"})
-    public ModelAndView login(){
+    public ModelAndView login(Principal principal){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
+        if (principal != null && !StringUtils.isEmpty(principal.getName())){
+            modelAndView.setViewName("redirect:/myaccount");
+        } else {
+            modelAndView.setViewName("login");
+        }
         return modelAndView;
     }
 

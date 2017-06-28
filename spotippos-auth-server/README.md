@@ -6,31 +6,14 @@ Projeto de servidor de autenticação utilizando oAuth2 e JWT com Spring Boot.
 
 Servidor de autenticação responsável autenticar o usuário e gerar o token de acesso para outras aplicações
 
-## O que esta feito
-
-1. Consigo gerar os token através do comando através dos endpoints através da chamada abaixo
-
-   `curl -XPOST "web_app:@localhost:9999/oauth/token" -d "grant_type=password&username=canela&password=canela"`
-
-1. Consigo fazer a autenticação através da tela de login
-
-## O que falta
-
-1. Após o usuário fazer a autenticação, gerar o token e redirecionar para a aplicação origem
-
-## TODO
-
-* Na tela de login receber client_id, client_secret, redirect_url
-* Verificar como gerar o token pelo serviço para redirecionar de volta para aplicação origem
-
 ## OAuth endpoints
 
-* /oauth/authorize
-* /oauth/token
-* /oauth/check_token
-* /oauth/confirm_access
-* /oauth/error
-* /oauth/token_key
+* /oauth/authorize -> chamado junto com client_id, response_type=code e redirect_uri encaminha para o login e retorna para a aplicação origem depois
+* /oauth/token -> passado junto com grant_type, username e password gera o token
+* /oauth/check_token -> 
+* /oauth/confirm_access ->
+* /oauth/error ->
+* /oauth/token_key ->
 
 ## Tecnologias
 
@@ -44,4 +27,5 @@ Servidor de autenticação responsável autenticar o usuário e gerar o token de
 
 * [Securing Spring Cloud Microservices With OAuth2](http://stytex.de/blog/2016/02/01/spring-cloud-security-with-oauth2/)
 * [Securing A Rest Service](https://spring.io/guides/tutorials/bookmarks/#_securing_a_rest_service)
+* [Single login page within authorization server using Spring Boot and OAUTH2](https://stackoverflow.com/questions/43613052/single-login-page-within-authorization-server-using-spring-boot-and-oauth2)
 * [Spring Boot + Spring MVC + Spring Security](https://medium.com/@gustavo.ponce.ch/spring-boot-spring-mvc-spring-security-mysql-a5d8545d837d)

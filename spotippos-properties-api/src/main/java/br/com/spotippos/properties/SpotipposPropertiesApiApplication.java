@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ import static br.com.spotippos.properties.model.Province.findProvinces;
  * @author Vinicius Cunha
  */
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpotipposPropertiesApiApplication {
 
 	public static void main(String[] args) {

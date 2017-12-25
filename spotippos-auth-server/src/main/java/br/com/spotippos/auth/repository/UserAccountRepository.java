@@ -1,6 +1,6 @@
 package br.com.spotippos.auth.repository;
 
-import br.com.spotippos.auth.model.UserAccount;
+import br.com.spotippos.auth.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
@@ -8,8 +8,8 @@ import java.util.Optional;
 /**
  * Created by vinic on 25/06/2017.
  */
-public interface UserAccountRepository extends CrudRepository<UserAccount, Long> {
+public interface UserAccountRepository extends CrudRepository<User, Long> {
 
-    Optional<UserAccount> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
 }

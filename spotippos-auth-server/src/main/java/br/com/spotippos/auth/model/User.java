@@ -10,30 +10,30 @@ import javax.persistence.Id;
  * Created by vinic on 25/06/2017.
  */
 @Entity
-public class UserAccount {
+public class User {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     @JsonIgnore
     private String password;
     private String username;
     private String email;
 
-    public UserAccount() { /* jpa only */ }
+    public User() { /* jpa only */ }
 
-    public UserAccount(String name, String password, String email) {
+    public User(String name, String password, String email) {
         this.username = name;
         this.password = password;
         this.email = email;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

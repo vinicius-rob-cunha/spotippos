@@ -1,8 +1,7 @@
 package br.com.spotippos.auth.controller;
 
-import br.com.spotippos.auth.model.UserAccount;
+import br.com.spotippos.auth.model.User;
 import br.com.spotippos.auth.service.UserAccountService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,16 +39,16 @@ public class LoginController {
     @GetMapping("/registration")
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
-        UserAccount user = new UserAccount();
+        User user = new User();
         modelAndView.addObject("user", user);
         modelAndView.setViewName("registration");
         return modelAndView;
     }
 
     @PostMapping("/registration")
-    public ModelAndView createNewUser(@Valid UserAccount user, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        UserAccount userExists = userService.findByUsername(user.getUsername());
+        User userExists = userService.findByUsername(user.getUsername());
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
@@ -60,7 +59,7 @@ public class LoginController {
         } else {
             userService.saveUser(user);
             modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", new UserAccount());
+            modelAndView.addObject("user", new User());
             modelAndView.setViewName("registration");
 
         }
@@ -71,7 +70,7 @@ public class LoginController {
     public ModelAndView myaccount(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserAccount user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getUsername() + " (" + user.getEmail() + ")");
         modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("myaccount");

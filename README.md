@@ -37,14 +37,45 @@ Enteder os parâmetros de resposta
 
    **Response**
    ```
+  {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic3BvdGlwcG9zLWFwaSJdLCJ1c2VyX25hbWUiOiJ2aW5pY2l1cyIsInNjb3BlIjpbInJlYWQiXSwidXNlcl9kYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6InZpbmljaXVzIiwiZW1haWwiOiJ2aW5pY2l1c0B0ZXN0ZS5jb20ifSwiZXhwIjoxNTE0MjUyNjE3LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU9fQ09NVU0iLCJyZWFkIl0sImp0aSI6ImZiNDk3YTRhLTk5YjYtNDAyZC04OWY3LTVjNmVhZWFkOTdhNSIsImNsaWVudF9pZCI6IndlYl9hcHAifQ.SeHm7Ecjzuz9Khhcg-E9AjnDuGFke1WnDF_h2wW62KQ",
+    "token_type": "bearer",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic3BvdGlwcG9zLWFwaSJdLCJ1c2VyX25hbWUiOiJ2aW5pY2l1cyIsInNjb3BlIjpbInJlYWQiXSwiYXRpIjoiZmI0OTdhNGEtOTliNi00MDJkLTg5ZjctNWM2ZWFlYWQ5N2E1IiwidXNlcl9kYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6InZpbmljaXVzIiwiZW1haWwiOiJ2aW5pY2l1c0B0ZXN0ZS5jb20ifSwiZXhwIjoxNTE2ODAxNDE3LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU9fQ09NVU0iLCJyZWFkIl0sImp0aSI6IjEyYmQ5MDQ2LTk3YzktNGZiYi1iYmIyLTYyM2VkNGEwMDVkZiIsImNsaWVudF9pZCI6IndlYl9hcHAifQ.dNZAKI6puvufXVZyvls58bXssmkIw-sVxFTJJJ7mFWk",
+    "expires_in": 43198,
+    "scope": "read",
+    "user_data": {
+        "id": id,
+        "username": "vinicius",
+        "email": "vinicius@teste.com"
+    },
+    "jti": "fb497a4a-99b6-402d-89f7-5c6eaead97a5"
+  }
+   ```
+
+   **JWT Header**
+   ```
    {
-     "access_token": "eyJhbGciOiJS...",
-     "token_type": "bearer",
-     "refresh_token": "eyJhbGciOiJSUzI1Ni...",
-     "expires_in": 43199, //seconds
-     "scope": "READ",
-     "jti": "a89fac95-45ca-42f9-a32d-a196b859d5ba"
+     "alg":"HS256",
+     "typ":"JWT"
    }
+   ```
+
+  **JWT Pyload**
+   ```
+   {
+    "aud": ["spotippos-api"],
+    "user_name":"vinicius",
+    "scope":["read"],
+    "user_data": {
+      "id":1,
+      "username":"vinicius",
+      "email":"vinicius@teste.com"
+    },
+    "exp":1514252617,
+    "authorities":["ROLE_USUARIO_COMUM","read"],
+    "jti":"fb497a4a-99b6-402d-89f7-5c6eaead97a5",
+    "client_id":"web_app"
+  }
    ```
 
    **Obs:** Por questão de segurança é importante que a redirect_uri esteja junto do client

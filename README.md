@@ -31,12 +31,13 @@ Enteder os parâmetros de resposta
 
 2. Após receber a resposta faz um post para o TOKEN com grant_type=authorization_code e o code recebido
 
-    **Request**
+  **Request**
 
-    POST http://localhost:9999/oauth/token?grant_type=authorization_code&client_id=web_app&redirect_uri=http://example.com&code=5tefj0
+  POST http://localhost:9999/oauth/token?grant_type=authorization_code&client_id=web_app&redirect_uri=http://example.com&code=5tefj0
 
-   **Response**
-   ```
+  **Response**
+
+  ```json
   {
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic3BvdGlwcG9zLWFwaSJdLCJ1c2VyX25hbWUiOiJ2aW5pY2l1cyIsInNjb3BlIjpbInJlYWQiXSwidXNlcl9kYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6InZpbmljaXVzIiwiZW1haWwiOiJ2aW5pY2l1c0B0ZXN0ZS5jb20ifSwiZXhwIjoxNTE0MjUyNjE3LCJhdXRob3JpdGllcyI6WyJST0xFX1VTVUFSSU9fQ09NVU0iLCJyZWFkIl0sImp0aSI6ImZiNDk3YTRhLTk5YjYtNDAyZC04OWY3LTVjNmVhZWFkOTdhNSIsImNsaWVudF9pZCI6IndlYl9hcHAifQ.SeHm7Ecjzuz9Khhcg-E9AjnDuGFke1WnDF_h2wW62KQ",
     "token_type": "bearer",
@@ -44,7 +45,7 @@ Enteder os parâmetros de resposta
     "expires_in": 43198,
     "scope": "read",
     "user_data": {
-        "id": id,
+        "id": 1,
         "username": "vinicius",
         "email": "vinicius@teste.com"
     },
@@ -53,7 +54,8 @@ Enteder os parâmetros de resposta
    ```
 
    **JWT Header**
-   ```
+
+   ```json
    {
      "alg":"HS256",
      "typ":"JWT"
@@ -61,7 +63,8 @@ Enteder os parâmetros de resposta
    ```
 
   **JWT Pyload**
-   ```
+
+  ```json
    {
     "aud": ["spotippos-api"],
     "user_name":"vinicius",
@@ -76,7 +79,7 @@ Enteder os parâmetros de resposta
     "jti":"fb497a4a-99b6-402d-89f7-5c6eaead97a5",
     "client_id":"web_app"
   }
-   ```
+  ```
 
    **Obs:** Por questão de segurança é importante que a redirect_uri esteja junto do client
 

@@ -1,0 +1,20 @@
+.sidenav {
+  display: flex;
+  width: 200px;
+  background: #2c4c3b;
+  padding: 64px 10px 10px;
+}
+
+.container {
+  padding-top: 65px;
+  background: transparent;
+}
+
+.header {
+  background: #182c25;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}

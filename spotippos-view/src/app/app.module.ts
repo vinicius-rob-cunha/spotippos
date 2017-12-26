@@ -6,6 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 
+import {
+  MatSidenavModule,
+  MatToolbarModule
+} from '@angular/material';
+
+@NgModule({
+  exports: [MatSidenavModule, MatToolbarModule]
+})
+export class SpotipposMaterialModule { }
 
 @NgModule({
   declarations: [
@@ -14,6 +23,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    SpotipposMaterialModule,
     AppRoutingModule
   ],
   providers: [],

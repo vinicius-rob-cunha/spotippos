@@ -7,12 +7,7 @@ body {
   background: #E0E0E0;
 }
 
-.basic-container {
-  padding: 5px;
+a {
+  color: inherit;
+  text-decoration: none; /* no underline */
 }
-
-.version-info {
-  font-size: 8pt;
-  float: right;
-}
-  

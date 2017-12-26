@@ -7,12 +7,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import {
+  MatIconModule,
   MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
 
 @NgModule({
-  exports: [MatSidenavModule, MatToolbarModule]
+  exports: [MatIconModule, MatSidenavModule, MatToolbarModule]
 })
 export class SpotipposMaterialModule { }
 

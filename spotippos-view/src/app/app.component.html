@@ -1,17 +1,20 @@
 <ng-container>
   <mat-toolbar class="header" color="primary">
-    Header
+    <div class="logo">
+        <mat-icon>home</mat-icon> Spottipos Properties
+    </div>    
+    <div class="tools">
+      <mat-icon>account_circle</mat-icon> &#123; Nome do usuário &#125;
+    </div>
   </mat-toolbar>
 
   <mat-sidenav #sidenav mode="side" class="sidenav" opened="true">
-    Sidenav
+    Menu
   </mat-sidenav>
 
   <mat-sidenav-container class="container">
 
-    <mat-sidenav #sidenav mode="side" class="sidenav" opened="true">
-      Sidenav
-    </mat-sidenav>
+    <mat-sidenav #sidenav mode="side" class="sidenav" opened="true"></mat-sidenav>
 
     Container
     <router-outlet></router-outlet>

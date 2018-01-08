@@ -1,5 +1,6 @@
 package br.com.spotippos.auth.config;
 
+import br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter;
 import br.com.spotippos.auth.model.User;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter.SUBJECT;
+
 @Component
 public class AdditionalInformationJWTEnhancer implements TokenEnhancer {
 
@@ -19,6 +22,7 @@ public class AdditionalInformationJWTEnhancer implements TokenEnhancer {
 
         User usuario = ((ResourceOwner) authentication.getPrincipal()).getUser();
         additionalInformation.put("user_data", usuario);
+        additionalInformation.put(SUBJECT, usuario.getId());
 
         DefaultOAuth2AccessToken defaultAccessToken = (DefaultOAuth2AccessToken) accessToken;
         defaultAccessToken.setAdditionalInformation(additionalInformation);

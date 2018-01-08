@@ -1,0 +1,12 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "sppotippos",
+      "alg": "RS256",
+      "n": "xIPYxPk7nLd-rQfji2pcs7Sym7Tb8o0k6X4t8FtlSrdehcNj2qFaBGliFWCxB8iHun5E_bg3OLxsDIv25sdiJuSRbr3bxsukyNuVCSEwc8IXMqhY9H0KcS33dMnI1IkVB8Pf3LSnk-q5sn2OXcE6fIAAuJ3PCOPbrzqtYvjlz14S6tbwopOkJVyCdeOsM442RpYkJTMmA7jGVTXwd7teg-Thm6YKAcuJyO6a_l9a7pPFnfEXtbZbeBqVjzjEbUka0FQlwODpWUYk1_qIJ6CX3GYu_-Y307y0qAJhU0irCo6xpG6ni-vNn5zh7Bz_uVrQEElGm4Z1573FKkO76MgfhQ"
+    }
+  ]
+}

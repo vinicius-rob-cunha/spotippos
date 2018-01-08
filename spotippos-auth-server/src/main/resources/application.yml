@@ -1,1 +1,3 @@
 server.port: 9999
+
+security.jwk.file: classpath:/private.jwk

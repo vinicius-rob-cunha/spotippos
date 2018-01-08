@@ -1,9 +1,13 @@
 package br.com.spotippos.auth.config;
 
+import br.com.spotippos.auth.config.jwk.JWKManager;
+import br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,6 +21,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
@@ -43,6 +49,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private AdditionalInformationJWTEnhancer tokenEnhancer;
+
+    @Value("${security.jwk.file}")
+    private Resource jwkResource;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -77,7 +86,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      * Responsável por permitir a leitura de tokens codificados com JWT
      */
     @Bean
-    public TokenStore jwtTokenStore() {
+    public TokenStore jwtTokenStore() throws Exception {
         return new JwtTokenStore(accessTokenConverter());
     }
 
@@ -89,10 +98,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      * e verificar a assinatura de um token, respectivamente.
      */
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(SIGNING_PUBLIC_KEY);
-        return converter;
+    public JwkAccessTokenConverter accessTokenConverter() throws Exception {
+        return new JwkAccessTokenConverter(jwkResource.getFile());
     }
 
     /**
@@ -103,7 +110,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      */
     @Bean
     @Primary
-    public DefaultTokenServices tokenServices() {
+    public DefaultTokenServices tokenServices() throws Exception {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(jwtTokenStore());
         tokenServices.setSupportRefreshToken(true);

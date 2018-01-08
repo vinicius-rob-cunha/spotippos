@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "d": "kBaweXTZTcaJfmubXxzkzes_TsXkw8rT9tRK8MLC2W7sQp4KeEL4kuWGQnB8PV2-j3KIOZS6AMK_Ys-5gGtPP382V4GkRPYKZDAE7gXE1gvJIJ6pYtLQNj5jA-H0fEnq_p-TY-ueN-nSsNo46euFa8YbQUKMjFMuQCSA_2HKdymVPnfj-F2HvlF3Wqs8ypT1_CyhlVhfbHf7_RjE9t4pCX20wZY5jOb_HTEwO4DmAbtd3hFVZDCPWeC7fA9e2sOUB9U-QvaPE5BXp3zEg5-I-2nGE1yPzm5c1uHcCLwNnIA624NMdaW6tP2GJp_vTUBeBpqAkfKjbgw0DzLL68_NwQ",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "sppotippos",
+      "alg": "RS256",
+      "n": "xIPYxPk7nLd-rQfji2pcs7Sym7Tb8o0k6X4t8FtlSrdehcNj2qFaBGliFWCxB8iHun5E_bg3OLxsDIv25sdiJuSRbr3bxsukyNuVCSEwc8IXMqhY9H0KcS33dMnI1IkVB8Pf3LSnk-q5sn2OXcE6fIAAuJ3PCOPbrzqtYvjlz14S6tbwopOkJVyCdeOsM442RpYkJTMmA7jGVTXwd7teg-Thm6YKAcuJyO6a_l9a7pPFnfEXtbZbeBqVjzjEbUka0FQlwODpWUYk1_qIJ6CX3GYu_-Y307y0qAJhU0irCo6xpG6ni-vNn5zh7Bz_uVrQEElGm4Z1573FKkO76MgfhQ"
+    }
+  ]
+}

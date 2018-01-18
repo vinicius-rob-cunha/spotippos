@@ -42,13 +42,18 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    *
    * @returns {Observable<boolean>}
    */
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {    
-    if(!this.authService.isAuthorized()){
-        this.authService.authorize();
-        return false;
-    }
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable< boolean > {    
+    return map(
+      this.authService.isAuthorized(),
+      (authorized: boolean) => {
+        if (!authorized) {
+          this.authService.authorize();
+          return false;
+        }
 
-    return true;
+        return true;
+      }
+    );
   }
 
   /**
@@ -62,7 +67,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   public canActivateChild(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
+  ): Observable<boolean> {
     return this.canActivate(route, state);
   }
 

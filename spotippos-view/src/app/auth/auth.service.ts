@@ -39,11 +39,11 @@ export class AuthService {
   public authorize(){
     var state = this.newState();
           
-    var authorizeUrl = `${Config.authServerUrl}authorize
-      ?client_id=${Config.client_id}
-      &response_type=code
-      &redirect_uri=${Config.fallbackUrl}
-      &state=${state}`;
+    var authorizeUrl = `${Config.authServerUrl}authorize` +
+      `?client_id=${Config.client_id}` +
+      "&response_type=code" +
+      `&redirect_uri=${Config.fallbackUrl}` +
+      `&state=${state}`;
 
     window.location.href = authorizeUrl;
   }
@@ -53,19 +53,23 @@ export class AuthService {
       return false;
     }
 
-    var tokenUrl = `${Config.authServerUrl}token
-      ?grant_type=authorization_code
-      &redirect_uri=${Config.fallbackUrl}
-      &code=${authCode}
-      &scope=read write`;
+    localStorage.removeItem('authState');
 
-    let headers = new HttpHeaders();
-    headers.set("Authorization", "Basic " + btoa(`${Config.client_id}:${Config.client_secret}`));
-    headers.set("Content-Type", "application/x-www-form-urlencoded");
+    var tokenUrl = `${Config.authServerUrl}token` +
+      `?grant_type=authorization_code` +
+      `&redirect_uri=${Config.fallbackUrl}` +
+      `&code=${authCode}` +
+      `&scope=read write`;
 
-    this.http.post<AccessData>(tokenUrl, {}, {headers})
+    let headers = 
+    new HttpHeaders()
+      .append("Authorization", "Basic " + btoa(`${Config.client_id}:${Config.client_secret}`))
+      .append("Content-Type", "application/x-www-form-urlencoded");
+
+    this.http.post<AccessData>(tokenUrl, null, {headers: headers})
             .subscribe(res => {
               this.saveAccessData(res);
+              this.router.navigateByUrl("/");
             });
   }
 

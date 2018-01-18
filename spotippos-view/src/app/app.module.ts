@@ -13,10 +13,11 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { ProvinceComponent } from './province/province.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   exports: [MatIconModule, MatSidenavModule, MatToolbarModule],
-  declarations: [ProvinceComponent]
+  declarations: [ProvinceComponent, LoginComponent]
 })
 export class SpotipposMaterialModule { }
 

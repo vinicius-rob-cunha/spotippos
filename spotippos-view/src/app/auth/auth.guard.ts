@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from '../rxjs.util';
 
 import { AuthService } from './auth.service';
-import { AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI } from './tokens';
+import { AUTH_SERVICE } from './tokens';
 
 /**
  * Guard, checks access token availability and allows or disallows access to page,
@@ -27,11 +27,10 @@ import { AUTH_SERVICE, PUBLIC_FALLBACK_PAGE_URI } from './tokens';
  * @implements {CanActivateChild}
  */
 @Injectable()
-export class ProtectedGuard implements CanActivate, CanActivateChild {
+export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(
-    @Inject(AUTH_SERVICE)private authService: AuthService,
-    @Inject(PUBLIC_FALLBACK_PAGE_URI) private publicFallbackPageUri: string,
+    @Inject(AUTH_SERVICE) private authService: AuthService,
     private router: Router
   ) {}
 
@@ -43,23 +42,13 @@ export class ProtectedGuard implements CanActivate, CanActivateChild {
    *
    * @returns {Observable<boolean>}
    */
-  public canActivate(
-    _route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> {
-    return map(
-      this.authService .isAuthorized(),
-      (isAuthorized: boolean) => {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {    
+    if(!this.authService.isAuthorized()){
+        this.authService.authorize();
+        return false;
+    }
 
-        if (!isAuthorized && !this.isPublicPage(state)) {
-          this.navigate(this.publicFallbackPageUri);
-
-          return false;
-        }
-
-        return true;
-      }
-    );
+    return true;
   }
 
   /**
@@ -73,21 +62,8 @@ export class ProtectedGuard implements CanActivate, CanActivateChild {
   public canActivateChild(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
+  ): boolean {
     return this.canActivate(route, state);
-  }
-
-  /**
-   * Check, if current page is public fallback page
-   *
-   * @private
-   *
-   * @param {RouterStateSnapshot} state
-   *
-   * @returns {boolean}
-   */
-  private isPublicPage(state: RouterStateSnapshot): boolean {
-    return state.url === this.publicFallbackPageUri;
   }
 
   /**

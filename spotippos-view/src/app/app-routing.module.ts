@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ProvinceComponent } from './province/province.component';
-import { ProtectedGuard } from './auth';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth';
 
 const routes: Routes = [
-  { path: '', component: ProvinceComponent, canActivate: [ProtectedGuard] },
-  { path: '**', component: ProvinceComponent, canActivate: [ProtectedGuard] }
+  { path: 'auth', component: LoginComponent },
+  { path: '', component: ProvinceComponent, canActivate: [AuthGuard] },
+  { path: '**', component: ProvinceComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

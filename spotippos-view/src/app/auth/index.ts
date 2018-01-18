@@ -1,1 +1,2 @@
-export { ProtectedGuard } from './protected.guard';
+export { AuthGuard } from './auth.guard';
+export { AuthService } from './auth.service';

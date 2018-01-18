@@ -1,11 +1,14 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { RequestOptions  } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import { Injectable, Inject } from '@angular/core';
 import { TokenStorage } from './token-storage.service';
+import { Router } from '@angular/router';
+import { Config } from '../constants';
 
 interface AccessData {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 /**
@@ -18,6 +21,7 @@ export class AuthService {
     
   constructor(
     private http: HttpClient,
+    private router: Router,
     private tokenStorage: TokenStorage
   ) {}
 
@@ -28,9 +32,41 @@ export class AuthService {
    * @memberOf AuthService
    */
   public isAuthorized(): Observable < boolean > {
-    return this.tokenStorage
-      .getAccessToken()
-      .map(token => !!token);
+    return this.getAccessToken()
+               .map(token => !!token);
+  }
+
+  public authorize(){
+    var state = this.newState();
+          
+    var authorizeUrl = `${Config.authServerUrl}authorize
+      ?client_id=${Config.client_id}
+      &response_type=code
+      &redirect_uri=${Config.fallbackUrl}
+      &state=${state}`;
+
+    window.location.href = authorizeUrl;
+  }
+
+  public handleAuth(authCode: String, authState: String) {
+    if(localStorage.getItem('authState') != authState){
+      return false;
+    }
+
+    var tokenUrl = `${Config.authServerUrl}token
+      ?grant_type=authorization_code
+      &redirect_uri=${Config.fallbackUrl}
+      &code=${authCode}
+      &scope=read write`;
+
+    let headers = new HttpHeaders();
+    headers.set("Authorization", "Basic " + btoa(`${Config.client_id}:${Config.client_secret}`));
+    headers.set("Content-Type", "application/x-www-form-urlencoded");
+
+    this.http.post<AccessData>(tokenUrl, {}, {headers})
+            .subscribe(res => {
+              this.saveAccessData(res);
+            });
   }
 
   /**
@@ -84,13 +120,17 @@ export class AuthService {
     return url.endsWith('/refresh');
   }
 
-  /**
-   * EXTRA AUTH METHODS
-   */
+  private newState(): String {
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    
+    var state = "";
+    for (var i = 0; i < 6; i++) {
+      state += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
-  public login(): Observable<any> {
-    return this.http.post(`http://localhost:3000/login`, { })
-    .do((tokens: AccessData) => this.saveAccessData(tokens));
+    localStorage.setItem('authState', state);
+  
+    return state;
   }
 
   /**
@@ -107,10 +147,10 @@ export class AuthService {
    * @private
    * @param {AccessData} data
    */
-  private saveAccessData({ accessToken, refreshToken }: AccessData) {
+  private saveAccessData({ access_token, refresh_token }: AccessData) {
     this.tokenStorage
-      .setAccessToken(accessToken)
-      .setRefreshToken(refreshToken);
+      .setAccessToken(access_token)
+      .setRefreshToken(refresh_token);
 }
 
 }

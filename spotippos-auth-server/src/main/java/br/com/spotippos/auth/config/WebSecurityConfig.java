@@ -4,6 +4,7 @@ import br.com.spotippos.auth.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,8 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
+        http    .authorizeRequests()
                     .antMatchers("/", "/myaccount").permitAll()
                     .anyRequest().authenticated()
                 .and()
@@ -52,12 +52,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logout()
                     .permitAll()
                 .and()
-                    .csrf().disable();
+                    .csrf().disable()
+                    ;
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+           .antMatchers(HttpMethod.OPTIONS, "/**")
            .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 

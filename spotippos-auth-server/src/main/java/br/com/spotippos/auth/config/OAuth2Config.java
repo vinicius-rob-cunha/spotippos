@@ -56,10 +56,10 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("web_app")
+                .withClient("spotippos-view")
                 .resourceIds(RESOURCE_ID)
                 .autoApprove(true) //evita que o usuário precisa conceder acesso, utilizar apenas para aplicações próprias
-                .redirectUris("http://example.com") //adicionar outras
+                .redirectUris("http://localhost:4200") //adicionar outras
                 .secret("123456")
                 .scopes("read","write")
                 .authorities("read", "write")

@@ -1,14 +1,16 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { RequestOptions  } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable, Inject } from '@angular/core';
 import { TokenStorage } from './token-storage.service';
+import { UserData, UserService } from './user.service';
 import { Router } from '@angular/router';
 import { Config } from '../constants';
 
 interface AccessData {
   access_token: string;
   refresh_token: string;
+  user_data: UserData;
 }
 
 /**
@@ -22,8 +24,9 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenStorage: TokenStorage
-  ) {}
+    private tokenStorage: TokenStorage,
+    private userService: UserService
+  ) { }
 
   /**
    * Check, if user already authorized.
@@ -69,6 +72,8 @@ export class AuthService {
     this.http.post<AccessData>(tokenUrl, null, {headers: headers})
             .subscribe(res => {
               this.saveAccessData(res);
+              this.saveUserData(res.user_data);
+
               this.router.navigateByUrl("/");
             });
   }
@@ -152,9 +157,18 @@ export class AuthService {
    * @param {AccessData} data
    */
   private saveAccessData({ access_token, refresh_token }: AccessData) {
-    this.tokenStorage
-      .setAccessToken(access_token)
-      .setRefreshToken(refresh_token);
-}
+    this.tokenStorage.setAccessToken(access_token)
+                     .setRefreshToken(refresh_token);
+  }
+
+  /**
+   * Save access data in the storage
+   *
+   * @private
+   * @param {AccessData} data
+   */
+  private saveUserData(user: UserData) {
+    this.userService.setUser(user);
+  }
 
 }

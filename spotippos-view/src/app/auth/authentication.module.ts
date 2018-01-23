@@ -7,6 +7,7 @@ import {
 
 import { TokenStorage } from './token-storage.service';
 import { AuthService } from './auth.service';
+import { UserData, UserService } from './user.service';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthGuard } from './auth.guard';
 import { Config } from '../constants';
@@ -19,6 +20,7 @@ export function factory(authenticationService: AuthService) {
     providers: [
       TokenStorage,
       AuthService,
+      UserService,
       { provide: PROTECTED_FALLBACK_PAGE_URI, useValue: '/' },
       {
         provide: AUTH_SERVICE,

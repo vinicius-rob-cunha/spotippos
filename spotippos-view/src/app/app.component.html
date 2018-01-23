@@ -4,8 +4,8 @@
         <mat-icon>home</mat-icon> Spottipos Properties
     </div>    
     <div class="tools">
-      <a href="#" class="tool">
-        <mat-icon>account_circle</mat-icon> &#123; Nome do usuário &#125;
+      <a href="#" class="tool" *ngIf="user" >
+        <mat-icon>account_circle</mat-icon> {{ user.username }}
       </a>
     </div>
   </mat-toolbar>

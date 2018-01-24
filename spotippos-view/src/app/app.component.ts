@@ -21,7 +21,17 @@ export class AppComponent {
   }
 
   logout(){
-    this.authService.logout()
+    //this.authService.logout()
+    this.authService
+        .refreshToken()
+        .subscribe(
+          () => {
+            console.log("SUCCESS");
+          },
+          () => {
+            console.log("FAILURE");
+          }
+        );
   }
 
 }

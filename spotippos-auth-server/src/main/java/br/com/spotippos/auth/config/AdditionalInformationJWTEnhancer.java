@@ -1,6 +1,5 @@
 package br.com.spotippos.auth.config;
 
-import br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter;
 import br.com.spotippos.auth.model.User;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -20,6 +19,7 @@ public class AdditionalInformationJWTEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInformation = new HashMap<>();
 
+        //TODO como recuperar o usuário a quem pertence o refresh_token para recupera-lo aqui
         User usuario = ((ResourceOwner) authentication.getPrincipal()).getUser();
         additionalInformation.put("user_data", usuario);
         additionalInformation.put(SUBJECT, usuario.getId());

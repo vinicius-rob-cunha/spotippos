@@ -1,4 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpRequest,
+  HttpHeaders,
+  HttpErrorResponse
+} from '@angular/common/http';
 import { RequestOptions  } from '@angular/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable, Inject } from '@angular/core';
@@ -98,7 +104,7 @@ export class AuthService {
     return this.tokenStorage
       .getRefreshToken()
       .switchMap((refreshToken: string) => {
-        return this.http.post(`http://localhost:3000/refresh`, { refreshToken });
+        return this.doRefreshToken(refreshToken);
       })
       .do(this.saveAccessData.bind(this))
       .catch((err) => {
@@ -106,6 +112,18 @@ export class AuthService {
 
         return Observable.throw(err);
       });
+  }
+
+  doRefreshToken(refreshToken: string) : Observable<any> {
+    var tokenUrl = `${Config.authServerUrl}token` +
+      `?grant_type=refresh_token` +
+      `&refresh_token=${refreshToken}` +
+      `&scope=read write`;
+
+    let headers = new HttpHeaders()
+        .append("Authorization", "Basic " + btoa(`${Config.client_id}:${Config.client_secret}`));
+
+    return this.http.post(tokenUrl, null, {headers: headers});
   }
 
   /**

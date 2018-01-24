@@ -3,6 +3,7 @@ package br.com.spotippos.auth.config.jwk;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
@@ -10,8 +11,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
 
@@ -23,6 +23,40 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
 
     public JwkAccessTokenConverter(File jwkFile) throws Exception {
         jwk = new JWKManager(jwkFile);
+    }
+
+    @Override
+    public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map) {
+        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(value);
+        Map<String, Object> info = new HashMap<>(map);
+        info.remove(EXP);
+        info.remove(AUD);
+        info.remove(CLIENT_ID);
+        info.remove(SCOPE);
+        if (map.containsKey(EXP)) {
+            token.setExpiration((Date)map.get(EXP));
+        }
+        if (map.containsKey(JTI)) {
+            info.put(JTI, map.get(JTI));
+        }
+        token.setScope(extractScope(map));
+        token.setAdditionalInformation(info);
+        return token;
+    }
+
+    private Set<String> extractScope(Map<String, ?> map) {
+        Set<String> scope = Collections.emptySet();
+        if (map.containsKey(SCOPE)) {
+            Object scopeObj = map.get(SCOPE);
+            if (String.class.isInstance(scopeObj)) {
+                scope = new LinkedHashSet<>(Arrays.asList(String.class.cast(scopeObj).split(" ")));
+            } else if (Collection.class.isAssignableFrom(scopeObj.getClass())) {
+                @SuppressWarnings("unchecked")
+                Collection<String> scopeColl = (Collection<String>) scopeObj;
+                scope = new LinkedHashSet<>(scopeColl);	// Preserve ordering
+            }
+        }
+        return scope;
     }
 
     @Override
@@ -45,7 +79,7 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
                     claims.claim(AUTHORITIES, authorityListToSet(clientToken.getAuthorities()));
                 }
             }
-
+            authentication.getUserAuthentication();
             if (token.getScope()!=null) {
                 claims.claim(SCOPE, token.getScope());
             }
@@ -58,7 +92,9 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
                 claims.expirationTime(token.getExpiration());
             }
 
-            token.getAdditionalInformation().entrySet().forEach(entry -> claims.claim(entry.getKey(), entry.getValue()));
+            token.getAdditionalInformation().entrySet().stream()
+                    .filter(entry -> !entry.getKey().equals(SUBJECT))
+                    .forEach(entry -> claims.claim(entry.getKey(), entry.getValue()));
 
             claims.claim(CLIENT_ID, clientToken.getClientId());
             if (clientToken.getResourceIds() != null && !clientToken.getResourceIds().isEmpty()) {

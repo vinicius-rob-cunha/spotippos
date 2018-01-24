@@ -147,7 +147,16 @@ export class AuthService {
    */
   public logout(): void {
     this.tokenStorage.clear();
-    location.reload(true);
+    this.userService.clear();
+
+    let state = this.newState();
+    let logoutUrl = `${Config.logoutUrl}` +
+      `?client_id=${Config.client_id}` +
+      "&response_type=code" +
+      `&redirect_uri=${Config.fallbackUrl}` +
+      `&state=${state}`;
+
+    window.location.href = logoutUrl;
   }
 
   /**

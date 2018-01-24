@@ -4,8 +4,11 @@
         <mat-icon>home</mat-icon> Spottipos Properties
     </div>    
     <div class="tools">
-      <a href="#" class="tool" >
+      <a href="#" class="tool" title="Usuário">
         <mat-icon>account_circle</mat-icon> {{ user.username }}
+      </a>
+      <a href="#" class="tool" title="Sair" (click)="logout()" >
+        <mat-icon>exit_to_app</mat-icon>
       </a>
     </div>
   </mat-toolbar>

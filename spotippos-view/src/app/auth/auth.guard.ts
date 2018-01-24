@@ -71,18 +71,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     return this.canActivate(route, state);
   }
 
-  /**
-   * Navigate away from the app / path
-   *
-   * @private
-   * @param {string} url
-   */
-  private navigate(url: string): void {
-    if (url.startsWith('http')) {
-      window.location.href = url;
-    } else {
-      this.router.navigateByUrl(url);
-    }
-  }
-
 }

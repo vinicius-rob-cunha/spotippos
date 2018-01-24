@@ -1,6 +1,5 @@
 package br.com.spotippos.auth.config;
 
-import br.com.spotippos.auth.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,14 +9,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  * Created by vinic on 24/06/2017.
@@ -50,10 +44,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .logout()
+                    .logoutSuccessHandler(logoutSuccessHandler())
                     .permitAll()
                 .and()
                     .csrf().disable()
                     ;
+    }
+
+    /**
+     * Recupera os parâmetros recebidos na URL, verificar se possui client_id e caso positivo
+     * redireciona para o endpoint de autenticação. Permitindo dessa forma, voltar para o SPA
+     * após o login, uma vez que esse foi o ultimo lugar.
+     */
+    private LogoutSuccessHandler logoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            String redirectTo;
+            if(request.getQueryString() != null && request.getQueryString().contains("client_id"))
+                redirectTo = "/oauth/authorize?"+request.getQueryString();
+            else {
+                redirectTo = "/";
+            }
+            response.sendRedirect(redirectTo);
+
+        };
     }
 
     @Override

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from './auth';
-import { UserData } from './auth';
+import { UserService, UserData, AuthService } from './auth';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +12,16 @@ export class AppComponent {
   user: UserData;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) { 
     this.userService.getUser().subscribe(user => {
       this.user = user;
     });
+  }
+
+  logout(){
+    this.authService.logout()
   }
 
 }

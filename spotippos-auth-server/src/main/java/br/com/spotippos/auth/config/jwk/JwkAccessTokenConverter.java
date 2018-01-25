@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.*;
 
 import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
+import static org.springframework.security.oauth2.provider.token.UserAuthenticationConverter.USERNAME;
 
 public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
 
@@ -68,6 +69,9 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
             OAuth2Request clientToken = authentication.getOAuth2Request();
 
             if (!authentication.isClientOnly()) {
+                //necessário para funcionar o refresh token
+                claims.claim(USERNAME, authentication.getName());
+
                 if(token.getAdditionalInformation().containsKey(SUBJECT)) {
                     claims.subject(token.getAdditionalInformation().get(SUBJECT).toString());
                 }

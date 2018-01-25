@@ -1,6 +1,5 @@
 package br.com.spotippos.auth.config;
 
-import br.com.spotippos.auth.config.jwk.JWKManager;
 import br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,10 +18,7 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-
-import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
@@ -79,6 +75,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                  .tokenStore(jwtTokenStore())
                  .tokenEnhancer(tokenEnhancerChain)
                  .accessTokenConverter(accessTokenConverter())
+                 .userDetailsService(userDetailsService);
         ;
     }
 
@@ -87,7 +84,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      */
     @Bean
     public TokenStore jwtTokenStore() throws Exception {
-        return new JwtTokenStore(accessTokenConverter());
+        JwtTokenStore tokenStore = new JwtTokenStore(accessTokenConverter());
+        return tokenStore;
     }
 
     /**

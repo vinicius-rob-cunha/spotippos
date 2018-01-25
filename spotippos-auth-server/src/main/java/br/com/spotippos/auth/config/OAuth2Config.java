@@ -1,11 +1,12 @@
 package br.com.spotippos.auth.config;
 
 import br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter;
+import br.com.spotippos.auth.config.jwt.CustomJwtTokenStore;
+import br.com.spotippos.auth.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -44,6 +44,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
     private AdditionalInformationJWTEnhancer tokenEnhancer;
 
     @Value("${security.jwk.file}")
@@ -59,7 +62,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .secret("123456")
                 .scopes("read","write")
                 .authorities("read", "write")
-                .authorizedGrantTypes("refresh_token", "authorization_code", "password");
+                .authorizedGrantTypes("refresh_token", "authorization_code", "password")
+                .accessTokenValiditySeconds(5*60) //5 minutos
+                .refreshTokenValiditySeconds(30*24*60*60); //30 dias
     }
 
     @Override
@@ -75,8 +80,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                  .tokenStore(jwtTokenStore())
                  .tokenEnhancer(tokenEnhancerChain)
                  .accessTokenConverter(accessTokenConverter())
-                 .userDetailsService(userDetailsService);
-        ;
+                 .userDetailsService(userDetailsService)
+                 .reuseRefreshTokens(false);
     }
 
     /**
@@ -84,7 +89,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      */
     @Bean
     public TokenStore jwtTokenStore() throws Exception {
-        JwtTokenStore tokenStore = new JwtTokenStore(accessTokenConverter());
+        JwtTokenStore tokenStore = new CustomJwtTokenStore(accessTokenConverter(), refreshTokenRepository);
         return tokenStore;
     }
 
@@ -100,18 +105,4 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
         return new JwkAccessTokenConverter(jwkResource.getFile());
     }
 
-    /**
-     * Permite ao fluxo do oAuth2 utilizar o {@link JwtTokenStore}.
-     *
-     * Anotação @{@link Primary} necessário pois o Spring Security OAuth2 já declara um.
-     * Com a anotação o nosso tem prioridade
-     */
-    @Bean
-    @Primary
-    public DefaultTokenServices tokenServices() throws Exception {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(jwtTokenStore());
-        tokenServices.setSupportRefreshToken(true);
-        return tokenServices;
-    }
 }

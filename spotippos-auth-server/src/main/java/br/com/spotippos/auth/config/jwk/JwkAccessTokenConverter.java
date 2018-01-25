@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import java.io.File;
 import java.util.*;
 
+import static br.com.spotippos.auth.config.AdditionalInformationJWTEnhancer.USER_DATA;
 import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
 import static org.springframework.security.oauth2.provider.token.UserAuthenticationConverter.USERNAME;
 
@@ -97,7 +98,7 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
             }
 
             token.getAdditionalInformation().entrySet().stream()
-                    .filter(entry -> !entry.getKey().equals(SUBJECT))
+                    .filter(entry -> !entry.getKey().equals(SUBJECT) && !entry.getKey().equals(USER_DATA))
                     .forEach(entry -> claims.claim(entry.getKey(), entry.getValue()));
 
             claims.claim(CLIENT_ID, clientToken.getClientId());
@@ -114,7 +115,7 @@ public class JwkAccessTokenConverter extends JwtAccessTokenConverter {
     }
 
     @Override
-    protected Map<String, Object> decode(String token) {
+    public Map<String, Object> decode(String token) {
         JWTClaimsSet jwt = jwk.decode(token);
         return jwt.getClaims();
     }

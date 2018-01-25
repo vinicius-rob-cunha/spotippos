@@ -15,12 +15,14 @@ import static br.com.spotippos.auth.config.jwk.JwkAccessTokenConverter.SUBJECT;
 @Component
 public class AdditionalInformationJWTEnhancer implements TokenEnhancer {
 
+    public static final String USER_DATA = "user_data";
+
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        Map<String, Object> additionalInformation = new HashMap<>();
-
         User usuario = ((ResourceOwner) authentication.getPrincipal()).getUser();
-        additionalInformation.put("user_data", usuario);
+
+        Map<String, Object> additionalInformation = new HashMap<>();
+        additionalInformation.put(USER_DATA, usuario);
         additionalInformation.put(SUBJECT, usuario.getId());
 
         DefaultOAuth2AccessToken defaultAccessToken = (DefaultOAuth2AccessToken) accessToken;

@@ -8,6 +8,10 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
+
 @Component
 public class CustomJwtTokenStore extends JwtTokenStore {
 
@@ -34,5 +38,7 @@ public class CustomJwtTokenStore extends JwtTokenStore {
     @Override
     public void removeRefreshToken(OAuth2RefreshToken token) {
         refreshTokenRepository.delete(token.getValue().hashCode());
+        refreshTokenRepository.deleteByExpireAtLessThan(now());
     }
+
 }

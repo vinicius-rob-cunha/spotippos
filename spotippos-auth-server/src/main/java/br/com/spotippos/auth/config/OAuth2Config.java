@@ -31,8 +31,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     public static final String RESOURCE_ID = "spotippos-api";
 
-    /** Representa a chave pública para assinar o payload do jwt */
-    public static final String SIGNING_PUBLIC_KEY = "mySuperSecretSigningKey";
+    public static final int REFRESH_TOKEN_VALIDITY_SECONDS = 30 * 24 * 60 * 60; //30 dias
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -64,7 +63,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .authorities("read", "write")
                 .authorizedGrantTypes("refresh_token", "authorization_code", "password")
                 .accessTokenValiditySeconds(5*60) //5 minutos
-                .refreshTokenValiditySeconds(30*24*60*60); //30 dias
+                .refreshTokenValiditySeconds(REFRESH_TOKEN_VALIDITY_SECONDS);
     }
 
     @Override
@@ -89,8 +88,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
      */
     @Bean
     public TokenStore jwtTokenStore() throws Exception {
-        JwtTokenStore tokenStore = new CustomJwtTokenStore(accessTokenConverter(), refreshTokenRepository);
-        return tokenStore;
+        return new CustomJwtTokenStore(accessTokenConverter(), refreshTokenRepository);
     }
 
     /**

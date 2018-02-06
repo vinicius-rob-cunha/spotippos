@@ -21,6 +21,8 @@ public class User {
     private String username;
     private String email;
 
+    private Boolean authenticated;
+
     public User() { /* jpa only */ }
 
     public User(String name, String password, String email) {
@@ -59,5 +61,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 }

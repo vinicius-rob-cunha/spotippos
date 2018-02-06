@@ -1,5 +1,6 @@
 package br.com.spotippos.auth.config;
 
+import br.com.spotippos.auth.handler.LoginHandler;
 import br.com.spotippos.auth.handler.LogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private LogoutHandler logoutHandler;
 
+    @Autowired
+    private LoginHandler loginHandler;
+
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -41,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .defaultSuccessUrl("/myaccount")
                     .failureUrl("/login?error=true")
+                    .successHandler(loginHandler)
                     .permitAll()
                 .and()
                     .logout()
@@ -53,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
            .antMatchers(HttpMethod.OPTIONS, "/**")
            .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
